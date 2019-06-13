@@ -1,0 +1,71 @@
+{
+  "name": "dom-max-size",
+  "description": "Determine the maximum scalable dimensions of an HTMLElement.",
+  "version": "1.0.0-alpha",
+  "license": "MIT",
+  "author": "Steven Vachon <contact@svachon.com> (https://svachon.com)",
+  "repository": "github:stevenvachon/dom-max-size",
+  "main": "index-es5.js",
+  "dependencies": {
+    "is-dom": "^1.1.0",
+    "is-dom-detached": "^2.0.0",
+    "void-elements": "^3.1.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-numeric-separator": "^7.2.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.2.0",
+    "@babel/preset-env": "^7.4.5",
+    "babel-plugin-add-module-exports": "^1.0.2",
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.4",
+    "gzip-size-cli": "^3.0.0",
+    "mocha": "^6.1.4",
+    "npm-watch": "~0.6.0",
+    "nyc": "^14.1.1",
+    "parcel": "^1.12.3",
+    "puppeteer": "^1.18.1",
+    "puppeteer-to-istanbul": "^1.2.2",
+    "rimraf": "^2.6.3"
+  },
+  "engines": {
+    "node": ">= 10"
+  },
+  "scripts": {
+    "build": "npm run build-release && npm run build-test",
+    "build-release": "babel index.js --out-file=index-es5.js --plugins=@babel/plugin-proposal-optional-chaining,@babel/plugin-proposal-numeric-separator,add-module-exports --presets=@babel/env --source-maps",
+    "build-test": "parcel build index-es5.js --experimental-scope-hoisting --global=DOMMaxSize --log-level=1 --no-cache --out-dir='.' --out-file=temp.js --public-url='.' && gzip-size temp.js",
+    "build:watch": "npm-watch build",
+    "ci": "npm run test && nyc report --reporter=text-lcov | coveralls",
+    "posttest": "nyc report --reporter=text-summary --reporter=html && rimraf temp.js temp.js.map",
+    "prepublishOnly": "npm test",
+    "pretest": "npm run build",
+    "test": "nyc --silent mocha test.js --bail --check-leaks --timeout=5000",
+    "test:watch": "npm-watch test"
+  },
+  "watch": {
+    "build": {
+      "inherit": true,
+      "patterns": [
+        "index.js"
+      ]
+    },
+    "test": {
+      "inherit": true,
+      "patterns": [
+        "index.js",
+        "test.js"
+      ]
+    }
+  },
+  "files": [
+    "index.js",
+    "index-es5.js",
+    "index-es5.js.map"
+  ],
+  "keywords": [
+    "dimensions",
+    "dom"
+  ]
+}
